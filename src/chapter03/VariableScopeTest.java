@@ -8,7 +8,7 @@ public class VariableScopeTest {
 	//전역 변수
 	static int gnumber = 10;
 	
-	//저역 상수 : START, END
+	//전역 상수 : START, END
 	static final int START = 1;
 	static final int END = 0;
 	
