@@ -68,12 +68,12 @@ public class DrinkOrderTestVer1 {
 				charge += scan.nextInt();			
 	
 				if(charge < menuPrice) {
-					strNeed = String.format("%,d", new Object[] {Integer.valueOf(menuPrice-charge)});
+					strNeed = String.format("%,d", menuPrice-charge);
 					System.out.print("금액이 " + strNeed + "원 부족합니다. 추가로 금액을 입력해주세요. > ");
 					
 				} else {
-					strCharge = String.format("%,d", new Object[] {Integer.valueOf(charge)});
-					strChange = String.format("%,d", new Object[] {Integer.valueOf(charge - menuPrice)});
+					strCharge = String.format("%,d", charge);
+					strChange = String.format("%,d", charge - menuPrice);
 					System.out.println("\n결제가 완료되었습니다.");
 					System.out.println("입력하신 금액은 총 " + strCharge + "원, 잔돈은 " + strChange + "원 입니다." );
 					
