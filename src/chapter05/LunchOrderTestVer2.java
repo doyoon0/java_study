@@ -29,7 +29,7 @@ public class LunchOrderTestVer2 {
 		int change = 0;
 		boolean menuFlag = true;
 		boolean chargeFlag = true;
-		
+				
 		//1. 메뉴 주문
 		while(menuFlag) {
 			System.out.print("메뉴 선택(숫자로)> ");
