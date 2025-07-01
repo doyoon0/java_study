@@ -10,34 +10,38 @@ public class MultipleArrayTest01 {
 		matrix2[1] = new int[3];
 		matrix2[2] = new int[3];
 		
-		int matrix3[][] = {{0,0,0}, {0,0,0}, {0,0,0}};
+		int matrix3[][] = {{10,20,30}, {40,50,60}, {70,80,90}};
 		
-		matrix[0][0] = 100;
-		matrix[2][1] = 500;
+		matrix[0][0] = 10;
+		matrix[2][1] = 50;
 		
 		//matrix
-		for(int i=0; i <matrix.length; i++ ) {
-			for(int j=0; j<matrix[i].length; j++) {
-				System.out.print("[" + i + "," + j + "] = " + matrix[i][j] + "\t");
+		for(int i=0 ; i<matrix.length ; i++) {
+			for(int j=0 ; j<matrix[i].length ; j++) {
+				System.out.print("["+i+","+j+"] = " + matrix[i][j]+"\t");
 			}
 			System.out.println();
 		}
 		
-		System.out.println("-----------------------------------------");
-		for(int i=0; i<matrix3.length; i++) {
-			for(int j=0; j<matrix3[i].length; j++) {
-				System.out.print("[" + i + "," + j + "] = " + matrix[i][j] + "\t");
+		//matrix2
+		System.out.println("-------------------");
+		for(int i=0 ; i<matrix2.length ; i++) {
+			for(int j=0 ; j<matrix2[i].length ; j++) {
+				System.out.print("["+i+","+j+"] = " + matrix2[i][j]+"\t");
 			}
 			System.out.println();
 		}
 		
-		System.out.println("-----------------------------------------");
-		for(int i=0; i<matrix3.length; i++) {
-			for(int j=0; j<matrix3[i].length; j++) {
-				System.out.print("[" + i + "," + j + "] = " + matrix[i][j] + "\t");
+		//matrix3
+		System.out.println("-------------------");
+		for(int i=0 ; i<matrix3.length ; i++) {
+			for(int j=0 ; j<matrix3[i].length ; j++) {
+				System.out.print("["+i+","+j+"] = " + matrix3[i][j]+"\t");
 			}
 			System.out.println();
 		}
+		
+
 	}
 
 }
