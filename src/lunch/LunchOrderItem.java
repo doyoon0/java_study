@@ -1,12 +1,12 @@
-package chapter07;
+package lunch;
 
-public class LunchMenu {
+public class LunchOrderItem {
 	//Field
 	int no;
 	String name;
 	int price;
+	int qty;
 	
 	//Constructor
-	
 	//Method
 }

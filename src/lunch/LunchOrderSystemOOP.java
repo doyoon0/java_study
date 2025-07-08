@@ -1,21 +1,43 @@
-package chapter07;
+package lunch;
 
 import java.util.Scanner;
 
 public class LunchOrderSystemOOP {
 	
 	//Field
-	Scanner scan = new Scanner(System.in);
-	String[] lunchMenuNames = {"햄버거(🍔)","피자(🍕)","라멘(🍜)","샐러드(🥗)"};
+	Scanner scan;
+	LunchOrderMenuManager menuManager;
+	String[] lunchMenuNames = {"햄버거(🍔)","피자(🍕)","라멘(🍜)","샐러드(🥗)"}; //선언+할당 동시에 
 	int[] lunchMenuPrice = {100, 200, 300, 400};
-	LunchMenu[] lunchMenuList = new LunchMenu[4]; //주문할 메뉴 : LunchMenu (음식메뉴)
-	LunchOrderItem[] orderItemList = new LunchOrderItem[4];
+	LunchMenu[] lunchMenuList; //주문할 메뉴 : LunchMenu (음식메뉴)
+	LunchOrderItem[] orderItemList;
 	LunchPaymentItem paymentItem;
 	int orderCount = 0; //메뉴 개수
 	int amount = 0; //결제금액 - 사용자 입력
 	int change = 0; //잔돈
+	String title;
 	
 	//Constructor
+	public LunchOrderSystemOOP() {  //기본 생성자
+		scan = new Scanner(System.in);
+		menuManager = new LunchOrderMenuManager();
+		lunchMenuList = new LunchMenu[4];
+		orderItemList = new LunchOrderItem[4];	
+		
+		menuManager.createLunchMenu();
+	};
+	
+	public LunchOrderSystemOOP(String title) {
+		this.title = title;
+		scan = new Scanner(System.in);
+		menuManager = new LunchOrderMenuManager(this); //자기자신을 받으면 this를 입력
+		lunchMenuList = new LunchMenu[4];
+		orderItemList = new LunchOrderItem[4];
+		
+		menuManager.createLunchMenu(); //런치 메뉴 생성 메소드 호출
+		showMainMenu();
+	}
+	
 	//Method
 	
 	// ***************** MAIN MENU START *******************************************************//
@@ -25,7 +47,7 @@ public class LunchOrderSystemOOP {
 	public void showMainMenu() {
 		System.out.println();
 		System.out.println("******************************************");
-		System.out.println("\t Welcome to Food Mart!!!");
+		System.out.println("\t Welcome to [" + title + "] Food Mart!!!");
 		System.out.println("******************************************");
 		System.out.println("\t 1. 음식 주문");		
 		System.out.println("\t 2. 주문 내역");		
@@ -35,7 +57,7 @@ public class LunchOrderSystemOOP {
 		System.out.println("******************************************");
 		System.out.println("***** Food Mart에 오신것을 환영합니다 *****");
 		
-		createLunchMenu();
+		menuManager.createLunchMenu();
 		selectMainMenu();		
 		
 		
@@ -62,7 +84,7 @@ public class LunchOrderSystemOOP {
 	public void checkMainMenu(int mainMenu) {
 		switch(mainMenu) {
 		case 1: 
-			showLunchMenu();
+			menuManager.showLunchMenu();
 			break;
 		case 2: 
 			orderList();
@@ -91,65 +113,7 @@ public class LunchOrderSystemOOP {
 	}
 	// ***************** MAIN MENU END *******************************************************//
 	
-	// ***************** LUNCH START *******************************************************//	
-	/*
-	 * 런치메뉴 생성
-	 */
-	public void createLunchMenu() {
-		for(int i=0; i<lunchMenuNames.length; i++) {
-			LunchMenu menu = new LunchMenu();
-			menu.no = i+1;
-			menu.name = lunchMenuNames[i];
-			menu.price = lunchMenuPrice[i];
-			
-			lunchMenuList[i] = menu;
-		}
-	}
 	
-	/*
-	 * 런치메뉴 출력
-	 */
-	public void showLunchMenu() {
-		System.out.println("******************************************");
-		for(LunchMenu menu : lunchMenuList) {
-			System.out.print(menu.no + ".  ");
-			System.out.print(menu.name + "\t");
-			System.out.println(menu.price);
-		}
-		System.out.println("******************************************");
-		selectLunchMenu();
-	}
-	
-	/*
-	 * 런치메뉴 선택
-	 */
-	public void selectLunchMenu() {
-		System.out.print("주문 메뉴(숫자)> ");
-		
-		if(scan.hasNextInt()) {
-			checkLunchMenu(scan.nextInt());
-		} else {
-			System.out.println("=> 입력된 값이 바르지 않습니다. 숫자만 입력해주세요 !!!!!!!!!!!!!!");
-			scan.next();
-			selectLunchMenu();
-		}
-	}
-	
-	/*
-	 * 런치메뉴 체크
-	 */
-	public void checkLunchMenu(int lunchMenu) {
-		//lunchMenu : 1~4 => 주문가능, 다른번호 : 메뉴 준비중 => 다시 입력
-		if(lunchMenu>=1 && lunchMenu<=4) {
-			//주문 진행
-			order(lunchMenu);
-			
-		} else {
-			System.out.println("=> 런치 메뉴 준비중~");
-			showLunchMenu();
-		}
-	}
-	// ***************** LUNCH END *******************************************************//
 	// ***************** ORDER START *******************************************************//
 	/*
 	 * 주문데이터 인덱스 검색
