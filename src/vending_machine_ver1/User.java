@@ -28,7 +28,7 @@ public class User {
 	//메뉴 선택
 	public int selectMenu() {
 		int menu = 0;
-		System.out.println("[" + name + "]메뉴선택> ");
+		System.out.print("[" + name + "]메뉴선택> ");
 		if(scan.hasNextInt()) {
 			menu = scan.nextInt();
 		} else {
@@ -39,26 +39,14 @@ public class User {
 		return menu;
 	}
 	
-	//동전 체크
-	public boolean coinCheck(int coin) {
-		boolean result = false;
-		if(coin == 100 || coin == 500) {
-			result = true;
-		}
-		return false;
-	}
-	
-	//동전 삽입
+	//동전 투입
 	public int insertCoin() {
 		int resultCoin = 0;
-		System.out.println("[" + name + "]동전입력> ");
+		System.out.print("[" + name + "]동전입력> ");
 		if(scan.hasNextInt()) {
 			//동전 체크 : 100원, 500원만 입력 가능
 			int coin = scan.nextInt();
 			resultCoin = coin;
-//			if(coinCheck(coin)) {
-//				
-//			}
 		} else {
 			System.out.println("=> 올바르지 않은 값, 다시 입력해주세요.");
 			scan.next();

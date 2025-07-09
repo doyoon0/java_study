@@ -1,4 +1,4 @@
-package vending_machine_ver1;
+package vending_machine_ver2;
 
 public class RestArea {
 	String name;
@@ -6,19 +6,20 @@ public class RestArea {
 	VendingMachine machine;
 	
 	public RestArea() {
-		this("만남의 광장"); //생성자 호출 함수
+		this("더조은");
 	}
 	
 	public RestArea(String name) {
 		this.name = name;
-		user = new User("정국");
+		user = new User("더조은");
 		welcome();
 		machine = new VendingMachine(user);
 	}
 	
 	public void welcome() {
 		System.out.println("------------------------------------------");
-		System.out.println(name + " ☕🍵🥤 휴게소에 오신것을 환영합니다");
+		System.out.println(" " + name + " ☕🍵🥤 휴게소에 오신것을 환영합니다");
 		System.out.println("------------------------------------------");
 	}
+	
 }
