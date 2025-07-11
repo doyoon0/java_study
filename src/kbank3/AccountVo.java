@@ -1,4 +1,4 @@
-package kbank_ver2;
+package kbank3;
 
 public class AccountVo {
 	//Field
