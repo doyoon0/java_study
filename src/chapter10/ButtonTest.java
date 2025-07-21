@@ -1,4 +1,4 @@
-//package chapter10;
+package chapter10;
 //
 //import java.awt.BorderLayout;
 //import java.awt.Button;
