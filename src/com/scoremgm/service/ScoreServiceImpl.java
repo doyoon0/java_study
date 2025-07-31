@@ -6,13 +6,14 @@ import java.util.Random;
 import java.util.Scanner;
 
 import com.scoremgm.app.ScoreMgmSystem;
-import com.scoremgm.model.Member;
-import com.scoremgm.repository.ScoreRepository;
+import com.scoremgm.model.MemberVo;
 import com.scoremgm.repository.ScoreRepositoryImpl;
+
+import db.GenericRepositoryInterface;
 
 public class ScoreServiceImpl implements ScoreService{
 	Scanner scan;
-	ScoreRepository repository = new ScoreRepositoryImpl();
+	GenericRepositoryInterface<MemberVo> repository = new ScoreRepositoryImpl();
 	ScoreMgmSystem sms;
 	
 	public ScoreServiceImpl() {}
@@ -35,11 +36,6 @@ public class ScoreServiceImpl implements ScoreService{
 		String[] labels = {"학생명", "전공", "국어", "영어", "수학"}; 
 		List memberInfo = new ArrayList();
 		 
-		//학번 생성 : 2025-랜덤4자리
-		Random rd = new Random();
-	 	String no ="2025-" + rd.nextInt(1000, 9999);
-	 	memberInfo.add(no);
-	 	
 	 	for(int i=0; i<labels.length; i++) {
 	 		if(i>=2) {
 	 			System.out.print(labels[i] + "> ");
@@ -59,11 +55,11 @@ public class ScoreServiceImpl implements ScoreService{
 		 * @param no 학번
 		 * @return List
 		 */
-		 public List createMemberInfo(Member member) {
+		 public List createMemberInfo(MemberVo member) {
 			String[] labels = {"국어", "영어", "수학"}; 
 			List memberInfo = new ArrayList();
 			
-			System.out.println("학번 : " + member.getNo() + "," + "학생명 : " + member.getName());
+//			System.out.println("학번 : " + member.getNo() + "," + "학생명 : " + member.getName());
 		 	
 		 	for(int i=0; i<labels.length; i++) {
 	 			System.out.print(labels[i] + "> ");
@@ -78,16 +74,16 @@ public class ScoreServiceImpl implements ScoreService{
 	public void register() {
 		List memberInfo = createMemberInfo();
 		//Member 생성
-		Member member = new Member();
-		member.setNo((String)memberInfo.get(0));
-		member.setName((String)memberInfo.get(1));
-		member.setDepartment((String)memberInfo.get(2));
-		member.setKor((int)memberInfo.get(3));
-		member.setEng((int)memberInfo.get(4));
-		member.setMath((int)memberInfo.get(5));
+		MemberVo member = new MemberVo();
+//		member.setNo((String)memberInfo.get(0));
+		member.setName((String)memberInfo.get(0));
+		member.setDepartment((String)memberInfo.get(1));
+		member.setKor((int)memberInfo.get(2));
+		member.setEng((int)memberInfo.get(3));
+		member.setMath((int)memberInfo.get(4));
 		
 		//저장소 등록을 위한 Repository 호출
-		if(repository.insert(member)) {
+		if(repository.insert(member) != 0) {
 			//성공
 			System.out.println("=> 등록 완료!! 전체학생 : " + getCount());
 		} else {
@@ -104,19 +100,20 @@ public class ScoreServiceImpl implements ScoreService{
 	@Override
 	public void list() {
 		if(getCount() != 0) {
-			List<Member> list = repository.findAll();
-			System.out.println("------------------------------------------------------");
-			System.out.println("학번\t\t이름\t전공\t국어\t영어\t수학");
-			System.out.println("------------------------------------------------------");
+			List<MemberVo> list = repository.findAll();
+			System.out.println("---------------------------------------------------------------------");
+			System.out.println("번호\t학번\t\t이름\t전공\t국어\t영어\t수학");
+			System.out.println("---------------------------------------------------------------------");
 			list.forEach(member -> {
-				System.out.print(member.getNo() + "  \t");
+				System.out.print(member.getRno() + "  \t");
+				System.out.print(member.getMid() + "  \t\t");
 				System.out.print(member.getName() + "  \t");
 				System.out.print(member.getDepartment() + "  \t");
 				System.out.print(member.getKor() + "  \t");
 				System.out.print(member.getEng() + "  \t");
 				System.out.print(member.getMath() + " \n");
 			});
-			System.out.println("------------------------------------------------------");
+			System.out.println("---------------------------------------------------------------------");
 		} else {
 			System.out.println("=> 등록된 학생이 없습니다. ");
 		}
@@ -128,21 +125,21 @@ public class ScoreServiceImpl implements ScoreService{
 	public void search() {
 		if(getCount() != 0) {
 			System.out.print("학번(뒤4자리) > ");
-			String no = scan.next();
-			Member member = repository.find(no);
-			if(member != null) {
-				System.out.println("------------------------------------------------------");
+			String mid = scan.next();
+			MemberVo member = repository.find(mid);
+			if(member.getMid() != null) {
+				System.out.println("---------------------------------------------------------------------");
 				System.out.println("\t학생정보 검색 결과");
-				System.out.println("------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------------");
 				System.out.println("학번\t\t이름\t전공\t국어\t영어\t수학");
-				System.out.println("------------------------------------------------------");
-				System.out.print(member.getNo() + "  \t");
+				System.out.println("---------------------------------------------------------------------");
+				System.out.print(member.getMid() + "  \t\t");
 				System.out.print(member.getName() + "  \t");
 				System.out.print(member.getDepartment() + "  \t");
 				System.out.print(member.getKor() + "  \t");
 				System.out.print(member.getEng() + "  \t");
 				System.out.print(member.getMath() + " \n");
-				System.out.println("------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------------");
 			} else {
 				System.out.println("=> 학생 정보 없음!");
 			}
@@ -158,9 +155,9 @@ public class ScoreServiceImpl implements ScoreService{
 	public void update() {
 		if(getCount() != 0) {
 			System.out.print("학번(뒤4자리) > ");
-			String no = scan.next();
-			Member member = repository.find(no);  //학생 정보 - old
-			if(member != null) {
+			String mid = scan.next();
+			MemberVo member = repository.find(mid);  //학생 정보 - old
+			if(member.getMid() != null) {
 				//수정할 학생 정보 입력!! 학번 제외!!
 				List memberInfo = createMemberInfo(member);
 				member.setKor((int)memberInfo.get(0));
@@ -170,19 +167,20 @@ public class ScoreServiceImpl implements ScoreService{
 				//storage에 member 업데이트
 				repository.update(member);
 				
-				List<Member> list = repository.findAll();
-				System.out.println("------------------------------------------------------");
-				System.out.println("\t학생정보 수정 결과");
-				System.out.println("------------------------------------------------------");
-				System.out.println("학번\t\t이름\t전공\t국어\t영어\t수학");
-				System.out.println("------------------------------------------------------");
-				System.out.print(member.getNo() + "  \t");
-				System.out.print(member.getName() + "  \t");
-				System.out.print(member.getDepartment() + "  \t");
-				System.out.print(member.getKor() + "  \t");
-				System.out.print(member.getEng() + "  \t");
-				System.out.print(member.getMath() + " \n");
-				System.out.println("------------------------------------------------------");
+				List<MemberVo> list = repository.findAll();
+				System.out.println("---------------------------------------------------------------------");
+				System.out.println("번호\t학번\t\t이름\t전공\t국어\t영어\t수학");
+				System.out.println("---------------------------------------------------------------------");
+				list.forEach(memberUpdate -> {
+					System.out.print(memberUpdate.getRno() + "  \t");
+					System.out.print(memberUpdate.getMid() + "  \t\t");
+					System.out.print(memberUpdate.getName() + "  \t");
+					System.out.print(memberUpdate.getDepartment() + "  \t");
+					System.out.print(memberUpdate.getKor() + "  \t");
+					System.out.print(memberUpdate.getEng() + "  \t");
+					System.out.print(memberUpdate.getMath() + " \n");
+				});
+				System.out.println("---------------------------------------------------------------------");
 				
 			} else {
 				System.out.println("=> 학생 정보 없음!");
@@ -199,26 +197,29 @@ public class ScoreServiceImpl implements ScoreService{
 	public void delete() {
 		if(getCount() != 0) {
 			System.out.print("학번(뒤4자리) > ");
-			String no = scan.next();
-			Member member = repository.find(no);  //학생 정보 - old
+			String mid = scan.next();
+			MemberVo member = repository.find(mid);  //학생 정보 - old
 			
-			if(member != null) {
+			if(member.getMid() != null) {
 				System.out.print("정말로 삭제하시겠습니까?(y/n) > ");
 				if(scan.next().equals("y")) {
-					repository.remove(no);
-					List<Member> list = repository.findAll();
+					repository.remove(mid);
+					List<MemberVo> list = repository.findAll();
 					System.out.println("------------------------------------------------------");
 					System.out.println("\t학생정보 삭제 결과");
-					System.out.println("------------------------------------------------------");
-					System.out.println("학번\t\t이름\t전공\t국어\t영어\t수학");
-					System.out.println("------------------------------------------------------");
-					System.out.print(member.getNo() + "  \t");
-					System.out.print(member.getName() + "  \t");
-					System.out.print(member.getDepartment() + "  \t");
-					System.out.print(member.getKor() + "  \t");
-					System.out.print(member.getEng() + "  \t");
-					System.out.print(member.getMath() + " \n");
-					System.out.println("------------------------------------------------------");
+					System.out.println("---------------------------------------------------------------------");
+					System.out.println("번호\t학번\t\t이름\t전공\t국어\t영어\t수학");
+					System.out.println("---------------------------------------------------------------------");
+					list.forEach(memberDelete -> {
+						System.out.print(memberDelete.getRno() + "  \t");
+						System.out.print(memberDelete.getMid() + "  \t\t");
+						System.out.print(memberDelete.getName() + "  \t");
+						System.out.print(memberDelete.getDepartment() + "  \t");
+						System.out.print(memberDelete.getKor() + "  \t");
+						System.out.print(memberDelete.getEng() + "  \t");
+						System.out.print(memberDelete.getMath() + " \n");
+					});
+					System.out.println("---------------------------------------------------------------------");
 				} else if (scan.next().equals("n")) {
 					sms.showMenu();
 					sms.selectMenu();

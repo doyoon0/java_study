@@ -1,21 +1,31 @@
 package com.scoremgm.model;
 
-public class Member {
-	private String no;
+public class MemberVo {
+	private int rno;
+	private String mid;
 	private String name;
 	private String department;
 	private int kor;
 	private int eng;
 	private int math;
+	private String mdate;
 	
-	public Member() {}
-
-	public String getNo() {
-		return no;
+	public MemberVo() {}
+	
+	public int getRno() {
+		return rno;
 	}
 
-	public void setNo(String no) {
-		this.no = no;
+	public void setRno(int rno) {
+		this.rno = rno;
+	}
+
+	public String getMid() {
+		return mid;
+	}
+
+	public void setMid(String mid) {
+		this.mid = mid;
 	}
 
 	public String getName() {
@@ -57,5 +67,15 @@ public class Member {
 	public void setMath(int math) {
 		this.math = math;
 	}
+
+	public String getMdate() {
+		return mdate;
+	}
+
+	public void setMdate(String mdate) {
+		this.mdate = mdate;
+	}
+	
+	
 
 }

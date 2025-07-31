@@ -4,73 +4,185 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.scoremgm.model.Member;
+import com.scoremgm.model.MemberVo;
 
-public class ScoreRepositoryImpl implements ScoreRepository{
-	List<Member> storage = new ArrayList<Member>();
+import db.DBConn;
+import db.GenericRepositoryInterface;
+
+public class ScoreRepositoryImpl extends DBConn implements GenericRepositoryInterface<MemberVo>{
+	
+	public ScoreRepositoryImpl() { super(); }
 	
 	@Override
-	public boolean insert(Member member) {
-		if(member == null) return false;
-		return storage.add(member);
+	public int insert(MemberVo member) {
+		int rows = 0;
+		String sql = """
+				insert into score_member (name, department, kor, eng, math, mdate)
+				values (?, ?, ?, ?, ?, curdate()) 
+			""";
+		
+		try {
+			getPreparedStatement(sql);
+			pstmt.setString(1,  member.getName());
+			pstmt.setString(2,  member.getDepartment());
+			pstmt.setInt(3,  member.getKor());
+			pstmt.setInt(4,  member.getEng());
+			pstmt.setInt(5,  member.getMath());
+			
+			rows = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return rows;
 		
 	}
 
 	@Override
 	public int getCount() {
-		return storage.size();
-	}
-
-	@Override
-	public List<Member> findAll() {
-		return storage;
-	}
-
-	@Override
-	public Member find(String no) {
-		no = "2025-" + no;
-		Member member = null;
+		int rows = 0;
+		String sql = """
+				select count(*) from score_member 
+			""";
 		
-		if(no != null) {
-			for(Member m : storage) {
-				if(m.getNo().equals(no)) {
-					member = m;
-				}
+		try {
+			getPreparedStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) rows = rs.getInt(1);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return rows;
+	}
+
+	@Override
+	public List<MemberVo> findAll() {
+		List<MemberVo> list = new ArrayList<MemberVo>();
+		String sql = """
+				select 
+					row_number() over() as rno
+					, mid
+					, name
+					, department
+					, kor
+					, eng
+					, math
+					, mdate
+				from score_member
+			""";
+		
+		try {
+			getPreparedStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				MemberVo memberVo = new MemberVo();
+				memberVo.setRno(rs.getInt(1));
+				memberVo.setMid(rs.getString(2));
+				memberVo.setName(rs.getString(3));
+				memberVo.setDepartment(rs.getString(4));
+				memberVo.setKor(rs.getInt(5));
+				memberVo.setEng(rs.getInt(6));
+				memberVo.setMath(rs.getInt(7));
+				memberVo.setMdate(rs.getString(8));
+				
+				list.add(memberVo);
 			}
-			//forEach는 메소드 호출이므로 stack에 새로운 블록으로 생성되어 실행됨!!
-			//그러므로 전에 실행중이던 find는 일시 중지가 되고 forEach로 주도권이 넘어오므로 find의 member는 사라진다
-//			storage.forEach(m -> {  
-//				if(m.getNo().equals(no)) member = m;
-//			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	@Override
+	public MemberVo find(String mid) {
+		mid = "M" + mid;
+		MemberVo member = new MemberVo();
+
+		String sql = """
+				select 
+					mid
+					, name
+					, department
+					, kor
+					, eng
+					, math
+					, mdate
+				from score_member
+				where mid = ?
+			""";
+		
+		try {
+			getPreparedStatement(sql);
+			pstmt.setString(1,  mid);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				member.setMid(rs.getString(1));
+				member.setName(rs.getString(2));
+				member.setDepartment(rs.getString(3));
+				member.setKor(rs.getInt(4));
+				member.setEng(rs.getInt(5));
+				member.setMath(rs.getInt(6));
+				member.setMdate(rs.getString(7));
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return member;
 	}
 
 	@Override
-	public void update(Member member) {
-		int idx = -1;
-		for(int i=0; i<storage.size(); i++) {
-			Member m = storage.get(i);
-			if(m.getNo() == member.getNo()) {
-				idx = i;
-				break;
-			}
+	public int update(MemberVo member) {
+		int rows = 0;
+		String sql = """
+				update score_member set kor = ?, eng = ?, math = ? where mid = ?
+			""";
+		
+		try {
+			getPreparedStatement(sql);
+			pstmt.setInt(1,  member.getKor());
+			pstmt.setInt(2,  member.getEng());
+			pstmt.setInt(3,  member.getMath());
+			pstmt.setString(4,  member.getMid());
+			
+			rows = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		storage.set(idx, member);
+		
+		return rows;
 	}
 
 	@Override
-	public void remove(String no) {
-		no = "2025-" + no;
-		Iterator<Member> ie = storage.iterator();
-		while(ie.hasNext()) {
-			Member member = ie.next();
-			if(member.getNo().equals(no)) {
-				ie.remove();
-				break;
-			}
+	public int remove(String mid) {
+		mid = "M" + mid;
+		int rows = 0;
+		
+		String sql = """
+				delete from score_member where mid = ?
+			""";
+		
+		try {
+			getPreparedStatement(sql);
+			pstmt.setString(1,  mid);
+			
+			rows = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
+		return rows;
 	}
 	
 }//class
