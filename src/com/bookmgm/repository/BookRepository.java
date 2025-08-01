@@ -2,14 +2,14 @@ package com.bookmgm.repository;
 
 import java.util.List;
 
-import com.bookmgm.model.Book;
+import com.bookmgm.model.BookVo;
 
 public interface BookRepository {
-	boolean insert(Book book);
-	List<Book> selectAll();
-	Book select(String id);
-	void update(Book book);
+	boolean insert(BookVo book);
+	List<BookVo> selectAll();
+	BookVo select(String id);
+	void update(BookVo book);
 	void remove(String id);
-	void remove(Book book);
+	void remove(BookVo book);
 	int getCount();
 }

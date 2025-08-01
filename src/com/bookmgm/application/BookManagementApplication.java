@@ -19,6 +19,7 @@ public class BookManagementApplication {
 	public BookManagementApplication() {
 		scan = new Scanner(System.in);
 		service = new DefaultBookService(this); //← 여기서 this는 BookManagementApplication 인스턴스
+		service.selectRepository();
 		showMenu();
 	}
 	

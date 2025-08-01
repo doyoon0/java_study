@@ -8,4 +8,5 @@ public interface BookService {
 	public void delete();
 	public void exit();
 	int getCount();
+	void selectRepository();
 }
