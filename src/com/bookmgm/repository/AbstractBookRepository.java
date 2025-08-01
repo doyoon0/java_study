@@ -60,7 +60,7 @@ public abstract class AbstractBookRepository extends DBConn implements GenericRe
 		try {
 			getPreparedStatement(sql);
 			rs = pstmt.executeQuery();
-			
+			//rs객체로 null 체크도 가능
 			while(rs.next()) {
 				BookVo bookVo = new BookVo();
 				bookVo.setRno(rs.getInt(1));

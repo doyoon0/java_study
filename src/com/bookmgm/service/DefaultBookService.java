@@ -1,12 +1,10 @@
 package com.bookmgm.service;
 
 import java.util.List;
-import java.util.Random;
 
 import com.bookmgm.application.BookManagementApplication;
 import com.bookmgm.model.BookVo;
 import com.bookmgm.repository.AladinBookRepositoryImpl;
-import com.bookmgm.repository.BookRepository;
 import com.bookmgm.repository.InMemoryBookRepositoryImpl;
 import com.bookmgm.repository.Yes24BookRepositoryImpl;
 
@@ -194,6 +192,7 @@ public class DefaultBookService implements BookService {
 	@Override
 	public void exit() {
 		System.out.println("💬시스템이 종료됩니다.");
+		repository.close();
 		System.exit(0);
 	}
 
