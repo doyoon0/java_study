@@ -21,7 +21,7 @@ public class MemberServiceImpl implements MemberService{
 		member.setUsername(username);
 		member.setPhone(phone);
 		
-		int result = repository.memberCheck(member);
+		int result = repository.menuGuestInfo(member);
 		
 		if(result == 1) {
 			return member;
@@ -31,7 +31,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public void memberInfo(MemberVo member) {
+	public void menuGuestInfo(MemberVo member) {
 		System.out.println("🥝현재 고객 정보 : ");
 		
 		if(member != null) {

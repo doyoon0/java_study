@@ -14,14 +14,14 @@ public class BookShoppingMallSystem {
 	public MemberService memberService;
 	public CartService cartService;
 	
-	public static final int CUSTOMER = 1;      // 고객정보 확인하기
-	public static final int LIST = 2;          // 장바구니상품목록보기  
-	public static final int CLEAR = 3;         // 장바구니 비우기
-	public static final int ADD = 4;           // 바구니에 항목 추가하기
-	public static final int REDUCE = 5;        // 장바구니의 항목수량 줄이기
-	public static final int REMOVE = 6;        // 장바구니의 항목 삭제하기
-	public static final int RECEIPT = 7;       // 영수증 표시하기
-	public static final int EXIT = 8;          // 종료
+	public static final int menuGuestInfo = 1;      		// 고객정보 확인하기
+	public static final int menuCartItemList = 2;          	// 장바구니상품목록보기  
+	public static final int menuCartClear = 3;         		// 장바구니 비우기
+	public static final int menuCartAddItem = 4;           	// 바구니에 항목 추가하기
+	public static final int menuCartRemoveItemCount = 5;    // 장바구니의 항목수량 줄이기
+	public static final int menuCartRemoveItem = 6;        	// 장바구니의 항목 삭제하기
+	public static final int menuCartBill = 7;       		// 영수증 표시하기
+	public static final int menuExit = 8;          			// 종료
 	
 	public BookShoppingMallSystem() {
 		scan = new Scanner(System.in);
@@ -69,29 +69,29 @@ public class BookShoppingMallSystem {
 			int menu = scan.nextInt();
 			
 			switch(menu) {
-			case CUSTOMER:
-				memberService.memberInfo(memberCheck);
+			case menuGuestInfo:
+				memberService.menuGuestInfo(memberCheck);
 				break;
-			case LIST:
-				cartService.cartList(memberCheck.getUserid());
+			case menuCartItemList:
+				cartService.menuCartItemList(memberCheck.getUserid());
 				break;
-			case CLEAR:
-				cartService.clear(memberCheck.getUserid());
+			case menuCartClear:
+				cartService.menuCartClear(memberCheck.getUserid());
 				break;
-			case ADD:
-				cartService.add(memberCheck.getUserid());
+			case menuCartAddItem:
+				cartService.menuCartAddItem(memberCheck.getUserid());
 				break;
-			case REDUCE:
-				cartService.reduce(memberCheck.getUserid());
+			case menuCartRemoveItemCount:
+				cartService.menuCartRemoveItemCount(memberCheck.getUserid());
 				break;
-			case REMOVE:
-				cartService.remove(memberCheck.getUserid());
+			case menuCartRemoveItem:
+				cartService.menuCartRemoveItem(memberCheck.getUserid());
 				break;
-			case RECEIPT:
-//				service.delete();
+			case menuCartBill:
+				cartService.menuCartBill(memberCheck.getUserid());
 				break;
-			case EXIT:
-				cartService.exit();
+			case menuExit:
+				cartService.menuExit();
 				break;
 			default:
 				System.out.println("=> 메뉴 준비중 입니다.");

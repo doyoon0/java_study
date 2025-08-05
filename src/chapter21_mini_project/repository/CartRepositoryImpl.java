@@ -5,7 +5,6 @@ import java.util.List;
 
 import chapter21_mini_project.model.BookVo;
 import chapter21_mini_project.model.CartVo;
-import chapter21_mini_project.model.ReceiptVo;
 import db.DBConn;
 
 public class CartRepositoryImpl extends DBConn implements CartRepository{
@@ -13,14 +12,17 @@ public class CartRepositoryImpl extends DBConn implements CartRepository{
 	public CartRepositoryImpl() { super(); }
 	
 	@Override
-	public List<CartVo> cartList(String userid) {
+	public List<CartVo> menuCartItemList(String userid) {
 		List<CartVo> list = new ArrayList<CartVo>();
 		String sql = """
 				select
-					isbn
-					, userid
-					, quantity
-				from book_market_cart
+					c.isbn
+					, c.userid
+					, c.quantity
+					, (c.quantity * b.price) as total
+				from book_market_cart c
+				inner join book_market_books b 
+				on c.isbn = b.isbn
 				where userid = ?
 				""";
 		
@@ -34,8 +36,7 @@ public class CartRepositoryImpl extends DBConn implements CartRepository{
 				CartVo cartVo = new CartVo();
 				cartVo.setIsbn(rs.getString(1));
 				cartVo.setUserid(rs.getString(2));
-				cartVo.setQuantity(rs.getInt(3));
-				
+				cartVo.setQuantity(rs.getInt(3));				cartVo.setTotal(rs.getInt(4));				
 				list.add(cartVo);
 			}
 			
@@ -47,7 +48,7 @@ public class CartRepositoryImpl extends DBConn implements CartRepository{
 	}
 
 	@Override
-	public int clear(String userid) {
+	public int menuCartClear(String userid) {
 		int rows = 0;
 		
 		String sql = """
@@ -68,7 +69,7 @@ public class CartRepositoryImpl extends DBConn implements CartRepository{
 	}
 
 	@Override
-	public int add(CartVo cartvo) {
+	public int menuCartAddItem(CartVo cartvo) {
 		int rows = 0;
 		
 		// 1. 먼저 기존 데이터 확인 
@@ -150,7 +151,7 @@ public class CartRepositoryImpl extends DBConn implements CartRepository{
 	}
 
 	@Override
-	public int reduce(CartVo cartvo) {
+	public int menuCartRemoveItemCount(CartVo cartvo) {
 		int rows = 0;
 		
 		// 1. 먼저 기존 데이터 확인 
@@ -193,7 +194,7 @@ public class CartRepositoryImpl extends DBConn implements CartRepository{
 	}
 
 	@Override
-	public int remove(CartVo cartvo) {
+	public int menuCartRemoveItem(CartVo cartvo) {
 		int rows = 0;
 		String sql = """
 				delete from book_market_cart where userid = ? and isbn = ?
@@ -212,53 +213,5 @@ public class CartRepositoryImpl extends DBConn implements CartRepository{
 		return rows;
 	}
 
-	@Override
-	public List<ReceiptVo> receipt(String userid, String address) {
-		List<ReceiptVo> list = new ArrayList<>();
-
-		String sql = """
-			SELECT 
-				m.username
-				, m.phone
-				, ? AS address
-				, NOW() AS sendDate
-				, c.isbn
-				, c.quantity
-				, b.price
-				, (c.quantity * b.price) AS totalPrice
-			FROM book_market_member m
-			JOIN book_market_cart c ON m.userid = c.userid
-			JOIN book_market_books b ON c.isbn = b.isbn
-			WHERE m.userid = ?
-		""";
-
-		try {
-			getPreparedStatement(sql);
-			pstmt.setString(1, address);  // 사용자 입력 배송지
-			pstmt.setString(2, userid);   // 사용자 ID
-
-			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				ReceiptVo vo = new ReceiptVo();
-				vo.setUsername(rs.getString(1));
-				vo.setPhone(rs.getString(2));
-				vo.setAddress(rs.getString(3));
-				vo.setSendDate(rs.getString(4));
-				vo.setIsbn(rs.getString(5));
-				vo.setQuantity(rs.getInt(6));
-				vo.setPrice(rs.getInt(7));
-				vo.setTotalPrice(rs.getInt(8));
-
-				list.add(vo);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-	
-	
 	
 }

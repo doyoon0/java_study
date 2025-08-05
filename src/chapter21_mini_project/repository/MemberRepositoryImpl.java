@@ -8,7 +8,7 @@ public class MemberRepositoryImpl extends DBConn implements MemberRepository{
 	public MemberRepositoryImpl() { super(); }
 	
 	@Override
-	public int memberCheck(MemberVo member) {
+	public int menuGuestInfo(MemberVo member) {
 		int rows = 0;
 		String sql = "select userid from book_market_member where username = ? and phone = ?";
 		
@@ -32,6 +32,28 @@ public class MemberRepositoryImpl extends DBConn implements MemberRepository{
 		}
 		
 		return rows;
+	}
+	@Override
+	public MemberVo getMemberById(String userid) {
+	    MemberVo member = null;
+	    String sql = "SELECT username, phone FROM book_market_member WHERE userid = ?";
+	    
+	    try {
+	        getPreparedStatement(sql);
+	        pstmt.setString(1, userid);
+	        rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            member = new MemberVo();
+	            member.setUserid(userid);
+	            member.setUsername(rs.getString("username"));
+	            member.setPhone(rs.getString("phone"));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return member;
 	}
 
 

@@ -1,11 +1,11 @@
 package chapter21_mini_project.service;
 
 public interface CartService {
-	public void cartList(String userid);
-	public void clear(String userid);
-	public void add(String userid);
-	public void reduce(String userid);
-	public void remove(String userid);
-	public void receipt(String userid);
-	public void exit();
+	public void menuCartItemList(String userid);
+	public void menuCartClear(String userid);
+	public void menuCartAddItem(String userid);
+	public void menuCartRemoveItemCount(String userid);
+	public void menuCartRemoveItem(String userid);
+	public void menuCartBill(String userid);
+	public void menuExit();
 }

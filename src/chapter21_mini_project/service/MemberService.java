@@ -4,5 +4,5 @@ import chapter21_mini_project.model.MemberVo;
 
 public interface MemberService {
 	MemberVo memberCheck(String username, String phone);
-	public void memberInfo(MemberVo member);
+	public void menuGuestInfo(MemberVo member);
 }
